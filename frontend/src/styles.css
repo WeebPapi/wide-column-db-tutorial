@@ -233,6 +233,53 @@ label {
   margin: 12px 0;
 }
 
+.snippet {
+  margin: 16px 0;
+}
+
+.snippetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.snippetHeader span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #334155;
+  font-weight: 800;
+}
+
+.snippetHeader button {
+  padding: 7px 10px;
+  background: #334155;
+}
+
+.topic {
+  color: #334155;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.compact {
+  padding: 18px;
+}
+
+.miniStatus {
+  margin-top: 20px;
+}
+
+.note {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 14px 0;
+}
+
 .code {
   font-size: 14px;
   white-space: pre-wrap;

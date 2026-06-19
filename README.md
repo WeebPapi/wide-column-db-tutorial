@@ -1,6 +1,10 @@
-# Wide-Column Databases with Apache Cassandra
+# Campus Shop Clickstream with Apache Cassandra
 
-A self-contained university final project about wide-column databases using Apache Cassandra. The local web app guides students through concepts, schema design, data loading, prepared CQL queries, denormalization, unsupported-query trade-offs, GenAI critique, presenter mode, and a two-hour tutorial flow.
+A self-contained university final project about wide-column databases using Apache Cassandra.
+
+The specific topic is **Campus Shop Clickstream**: modelling user activity history, purchases, device activity, and service errors for a fictional student shopping app.
+
+The website is a guided lab manual. It provides short explanations, terminal commands, CQL snippets, expected results, and optional checks. Students still run Cassandra commands themselves with Docker and `cqlsh`.
 
 ## One-command startup
 
@@ -16,9 +20,9 @@ http://localhost:3000
 
 First run:
 
-1. Click **Initialize Database**.
-2. Click **Generate and load demo data**.
-3. Enter **Presenter Mode** or **Tutorial Mode**.
+1. Follow the steps in the left sidebar.
+2. Run the shown Docker and `cqlsh` commands in your terminal.
+3. Use the app's optional checks only after running the commands yourself.
 
 ## Prerequisites
 
@@ -34,7 +38,7 @@ First run:
 
 ## Vercel preview
 
-Vercel can host the interactive frontend plus a lightweight mock API for online review. The real Cassandra lab still runs locally through Docker Compose.
+Vercel can host the interactive guide for online review. The deployed site uses mock data. The real Cassandra lab runs locally through Docker Compose.
 
 ## Architecture
 
@@ -47,15 +51,15 @@ Browser
 
 ## Services
 
-- `frontend`: interactive workshop UI.
-- `backend`: FastAPI API, Cassandra readiness, schema initialization, deterministic data loading, prepared queries.
+- `frontend`: guided lab UI with command snippets and optional checks.
+- `backend`: FastAPI API for sample data loading, query checks, and validation helpers.
 - `cassandra`: single local Cassandra node for classroom use.
 
 Production Cassandra normally runs as a multi-node cluster. This project uses one node to keep the classroom setup manageable.
 
 ## Reset
 
-In the app, click **Reset Database** and confirm. From the terminal:
+From the terminal:
 
 ```bash
 docker compose down -v
@@ -64,18 +68,18 @@ docker compose up --build
 
 ## Demo Mode
 
-Presenter Mode gives larger text, a live-demo sequence, teaching points, and presenter prompts for the three-person group.
+Presenter Mode focuses on the three-person split and who explains each part.
 
 ## Tutorial Mode
 
-Tutorial Mode follows a two-hour timeline: startup, concepts, schema, initialization, guided queries, key exercises, denormalization, GenAI, SQL comparison, and summary.
+Tutorial Mode follows a two-hour timeline: startup, concepts, schema creation, data loading, manual CQL queries, bad query discussion, GenAI critique, and SQL comparison.
 
 ## Common Errors
 
 - Cassandra disconnected: wait 60-90 seconds and click Refresh.
 - Backend unavailable: check `docker compose logs backend`.
 - Port conflict: free ports 3000, 8000, or 9042.
-- Empty query results: load demo data, then use a date shown in the dataset stats.
+- Empty query results: load demo data, then use one of the dates returned by `/api/data/load`.
 
 ## Project Structure
 

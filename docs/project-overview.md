@@ -2,7 +2,7 @@
 
 ## Project topic
 
-Wide-column databases using Apache Cassandra.
+Campus Shop Clickstream: modelling user activity history with Apache Cassandra.
 
 ## Core message
 
@@ -10,7 +10,7 @@ Cassandra tables are designed around the queries the application needs to run. I
 
 ## Use case
 
-High-volume application event and user activity tracking: logins, page views, searches, purchases, errors, API requests, and device activity.
+A fictional student shopping app records logins, page views, searches, purchases, API requests, device activity, and checkout errors.
 
 ## Technology stack
 
@@ -21,7 +21,7 @@ High-volume application event and user activity tracking: logins, page views, se
 
 ## Web app concept
 
-Students run `docker compose up --build`, open `http://localhost:3000`, and complete the live demo and tutorial through one local application.
+Students run `docker compose up --build`, open `http://localhost:3000`, and use the website as a guided lab manual. The site provides commands, CQL snippets, expected results, and optional checks, but students still interact with Cassandra through `cqlsh`.
 
 ## Access patterns
 
@@ -70,7 +70,7 @@ The presentation covers concepts, a scenario where Cassandra excels, a guided tu
 
 ## Minimum viable version
 
-The first version includes one-command startup, status, initialization, sample data, schema explorer, four prepared query views, denormalization, unsupported query exercise, table-design exercise, SQL comparison, Presenter Mode, Tutorial Mode, docs, and tests.
+The revised first version includes one-command startup, a student-facing lab guide, CQL snippets, manual schema/query tasks, sample data loading, schema explorer, optional query checks, unsupported query exercise, table-design exercise, SQL comparison, Presenter Mode, Tutorial Mode, docs, and tests.
 
 ## Immediate next actions
 

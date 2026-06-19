@@ -13,6 +13,7 @@ services:
       HEAP_NEWSIZE: 256M
     volumes:
       - cassandra-data:/var/lib/cassandra
+      - ./cassandra:/workspace/cassandra:ro
     healthcheck:
       test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES' localhost 9042"]
       interval: 20s

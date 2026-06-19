@@ -8,38 +8,38 @@ cd wide-column-db-final-project
 docker compose up --build
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:3000`. The website is the guide, not a replacement for the terminal.
 
 ## Opening script
 
-"Today we are showing Cassandra through an event-tracking system. The main idea is that Cassandra tables are not designed like normalized SQL tables. They are designed from the query backwards."
+"Today we are modelling a campus shop clickstream in Cassandra. You will run the database commands yourselves, and the website will guide each step."
 
 ## Presenter Mode flow
 
-1. System status
-   - Say: "Cassandra can take a little while to accept connections, so the backend retries and the UI stays readable."
-   - Expected result: backend is healthy and Cassandra eventually shows connected.
-2. Initialize database
-   - Say: "The backend creates the keyspace and query-specific tables idempotently."
-   - Expected result: all schema tables exist.
-3. Load demo data
-   - Say: "The data is fictional and deterministic, so every group can reproduce the same workshop."
-   - Expected result: row counts appear for all tables.
-4. Schema explorer
+1. Start Docker and check Cassandra
+   - Say: "Cassandra takes a moment to start. We verify it using cqlsh, not just the website."
+   - Expected result: `DESCRIBE KEYSPACES` returns system keyspaces.
+2. Create keyspace
+   - Say: "A keyspace is Cassandra's namespace and replication configuration."
+   - Expected result: `activity_tracking` exists.
+3. Create tables
+   - Say: "Each table exists for one known read path."
+   - Expected result: `DESCRIBE TABLES` lists the tutorial tables.
+4. Load demo data
+   - Say: "We use a helper endpoint to generate repeatable fictional rows, then inspect them with CQL."
+   - Expected result: row counts are greater than zero.
+5. Schema explorer
    - Say: "Each table shows a supported query, partition key, clustering columns, and regular columns."
    - Expected result: students can identify `events_by_user`.
-5. Run latest events for a user
+6. Run latest events for a user
    - Say: "This query supplies the full partition key: user and date."
    - Expected result: newest events appear with execution duration.
-6. Run events by type
+7. Run events by type
    - Say: "This is the same logical data duplicated into another table for another read path."
    - Expected result: purchase or search rows appear.
-7. Run errors by service
+8. Run errors by service
    - Say: "Operational troubleshooting gets a table shaped for service and day."
    - Expected result: error rows appear for the selected service.
-8. Denormalization explorer
-   - Say: "One logical event can appear in multiple Cassandra tables."
-   - Expected result: copies are listed by table.
 9. Unsupported query
    - Say: "Global purchases over EUR 100 ordered by amount do not match any partition key."
    - Expected result: students see why `ALLOW FILTERING` is a warning sign.
@@ -57,9 +57,9 @@ Open `http://localhost:3000`.
 
 - 0:00-0:10: Start Docker and open the app.
 - 0:10-0:20: Cassandra and wide-column concepts.
-- 0:20-0:35: Explore schema and identify keys.
-- 0:35-0:45: Initialize Cassandra and load data.
-- 0:45-1:05: Run user, type, error, and device queries.
+- 0:20-0:35: Create keyspace and schema.
+- 0:35-0:45: Load data and verify row counts.
+- 0:45-1:05: Run user, type, error, and device queries in cqlsh.
 - 1:05-1:20: Partition key and clustering exercises.
 - 1:20-1:35: Denormalization and unsupported query challenge.
 - 1:35-1:50: Design a new table and use GenAI.
@@ -67,9 +67,10 @@ Open `http://localhost:3000`.
 
 ## Exact student tasks
 
-- Mark each sidebar step complete.
+- Mark each sidebar step complete after running the command.
+- Create the keyspace and tables from the provided CQL files.
 - Load the small dataset with seed `42`.
-- Run `events_by_user` for `user_001`.
+- Run `events_by_user` for `user_001` in cqlsh.
 - Run `events_by_type` for `purchase`.
 - Run `errors_by_service` for `checkout`.
 - Run `events_by_device` for `device_03`.
