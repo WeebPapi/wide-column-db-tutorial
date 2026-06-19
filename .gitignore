@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+node_modules/
+dist/
+.env
+data/generated/*
+!data/generated/.gitkeep
+*.log
+
+.vercel

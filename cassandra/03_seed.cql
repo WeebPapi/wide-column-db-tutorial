@@ -1,0 +1,3 @@
+-- The application loads deterministic sample data through the backend API.
+-- Open http://localhost:3000 and click "Generate and load demo data".
+-- This file exists so students can see where static seed CQL would live.

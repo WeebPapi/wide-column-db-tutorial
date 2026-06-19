@@ -1,0 +1,47 @@
+services:
+  cassandra:
+    image: cassandra:4.1.5
+    container_name: wide-column-cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      CASSANDRA_CLUSTER_NAME: WideColumnTutorial
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_RACK: rack1
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      MAX_HEAP_SIZE: 1G
+      HEAP_NEWSIZE: 256M
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'DESCRIBE KEYSPACES' localhost 9042"]
+      interval: 20s
+      timeout: 10s
+      retries: 12
+      start_period: 60s
+
+  backend:
+    build: ./backend
+    container_name: wide-column-backend
+    environment:
+      CASSANDRA_HOSTS: cassandra
+      CASSANDRA_PORT: 9042
+      CASSANDRA_KEYSPACE: activity_tracking
+    ports:
+      - "8000:8000"
+    depends_on:
+      cassandra:
+        condition: service_started
+
+  frontend:
+    build: ./frontend
+    container_name: wide-column-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+
+volumes:
+  cassandra-data:
