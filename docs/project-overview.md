@@ -21,7 +21,7 @@ A fictional student shopping app records logins, page views, searches, purchases
 
 ## Web app concept
 
-Students run `docker compose up --build`, open `http://localhost:3000`, and use the website as a guided lab manual. The site provides commands, CQL snippets, expected results, and optional checks, but students still interact with Cassandra through `cqlsh`.
+Students run `docker compose up --build`, open `http://localhost:3000`, and use one shared app. The first section is an interactive visual demo of the use case. The second section is a hands-on tutorial with commands, CQL snippets, expected results, and optional checks. Students still interact with Cassandra through `cqlsh`.
 
 ## Access patterns
 
@@ -49,7 +49,7 @@ Students run `docker compose up --build`, open `http://localhost:3000`, and use 
 - Deterministic sample data generator
 - Backend API
 - Interactive tutorial UI
-- Presenter Mode and Tutorial Mode
+- Interactive demo and guided tutorial
 - SQL comparison materials
 - Tests and smoke script
 - Markdown project documents
@@ -60,7 +60,7 @@ The repository is split into `frontend`, `backend`, `cassandra`, `scripts`, `doc
 
 ## Presentation structure
 
-The presentation covers concepts, a scenario where Cassandra excels, a guided tutorial, hands-on exercises, GenAI critique, and a fair SQL comparison.
+The presentation uses the same app as the students: interactive demo first, hands-on tutorial second, then GenAI critique and a fair SQL comparison.
 
 ## Three-person split
 
@@ -70,7 +70,7 @@ The presentation covers concepts, a scenario where Cassandra excels, a guided tu
 
 ## Minimum viable version
 
-The revised first version includes one-command startup, a student-facing lab guide, CQL snippets, manual schema/query tasks, sample data loading, schema explorer, optional query checks, unsupported query exercise, table-design exercise, SQL comparison, Presenter Mode, Tutorial Mode, docs, and tests.
+The revised first version includes one-command startup, an interactive use-case demo, CQL snippets, manual schema/query tasks, sample data loading, optional query checks, unsupported query exercise, table-design exercise, SQL comparison, docs, and tests.
 
 ## Immediate next actions
 

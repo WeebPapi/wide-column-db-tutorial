@@ -4,7 +4,7 @@ A self-contained university final project about wide-column databases using Apac
 
 The specific topic is **Campus Shop Clickstream**: modelling user activity history, purchases, device activity, and service errors for a fictional student shopping app.
 
-The website is a guided lab manual. It provides short explanations, terminal commands, CQL snippets, expected results, and optional checks. Students still run Cassandra commands themselves with Docker and `cqlsh`.
+The website has one flow for everybody: an interactive demo of the use case, followed by a hands-on tutorial with terminal and CQL snippets. Students still run Cassandra commands themselves with Docker and `cqlsh`.
 
 ## One-command startup
 
@@ -20,9 +20,9 @@ http://localhost:3000
 
 First run:
 
-1. Follow the steps in the left sidebar.
-2. Run the shown Docker and `cqlsh` commands in your terminal.
-3. Use the app's optional checks only after running the commands yourself.
+1. Use the interactive demo to see how app actions become Cassandra rows.
+2. Follow the tutorial steps in the left sidebar.
+3. Run the shown Docker and `cqlsh` commands in your terminal.
 
 ## Prerequisites
 
@@ -66,13 +66,13 @@ docker compose down -v
 docker compose up --build
 ```
 
-## Demo Mode
+## Demo Section
 
-Presenter Mode focuses on the three-person split and who explains each part.
+The first section is an interactive Campus Shop clickstream demo. Students click app actions such as login, search, purchase, and checkout error, then see how one logical event is copied into Cassandra query tables.
 
-## Tutorial Mode
+## Tutorial Section
 
-Tutorial Mode follows a two-hour timeline: startup, concepts, schema creation, data loading, manual CQL queries, bad query discussion, GenAI critique, and SQL comparison.
+The tutorial section provides copyable terminal and CQL snippets for Docker startup, Cassandra readiness checks, schema creation, data loading, manual queries, bad-query discussion, GenAI critique, and SQL comparison.
 
 ## Common Errors
 

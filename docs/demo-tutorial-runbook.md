@@ -8,13 +8,28 @@ cd wide-column-db-final-project
 docker compose up --build
 ```
 
-Open `http://localhost:3000`. The website is the guide, not a replacement for the terminal.
+Open `http://localhost:3000`. The website has one flow: interactive demo first, hands-on tutorial second.
 
 ## Opening script
 
 "Today we are modelling a campus shop clickstream in Cassandra. You will run the database commands yourselves, and the website will guide each step."
 
-## Presenter Mode flow
+## Demo section flow
+
+1. Open the Campus Shop demo.
+   - Say: "This is the app whose clickstream we are modelling."
+   - Expected result: students see app actions and Cassandra query tables.
+2. Click Login, Search, Purchase, and Checkout error.
+   - Say: "Each action creates an event."
+   - Expected result: the latest event card updates.
+3. Select different Cassandra tables.
+   - Say: "The same event is copied into tables shaped for different queries."
+   - Expected result: copied rows appear under the selected table.
+4. Point out the partition key badge.
+   - Say: "This table is fast only for queries that provide this key."
+   - Expected result: students can name a partition key.
+
+## Tutorial section flow
 
 1. Start Docker and check Cassandra
    - Say: "Cassandra takes a moment to start. We verify it using cqlsh, not just the website."
@@ -28,35 +43,28 @@ Open `http://localhost:3000`. The website is the guide, not a replacement for th
 4. Load demo data
    - Say: "We use a helper endpoint to generate repeatable fictional rows, then inspect them with CQL."
    - Expected result: row counts are greater than zero.
-5. Schema explorer
-   - Say: "Each table shows a supported query, partition key, clustering columns, and regular columns."
-   - Expected result: students can identify `events_by_user`.
-6. Run latest events for a user
+5. Run latest events for a user
    - Say: "This query supplies the full partition key: user and date."
    - Expected result: newest events appear with execution duration.
-7. Run events by type
+6. Run events by type
    - Say: "This is the same logical data duplicated into another table for another read path."
    - Expected result: purchase or search rows appear.
-8. Run errors by service
+7. Run errors by service
    - Say: "Operational troubleshooting gets a table shaped for service and day."
    - Expected result: error rows appear for the selected service.
-9. Unsupported query
+8. Unsupported query
    - Say: "Global purchases over EUR 100 ordered by amount do not match any partition key."
    - Expected result: students see why `ALLOW FILTERING` is a warning sign.
-10. Design a new table
+9. Design a new table
     - Say: "A new predictable query often means a new table."
     - Expected result: `(device_id, event_date)` and `event_time DESC` validate.
-11. SQL comparison
+10. SQL comparison
     - Say: "SQL is stronger for flexible reporting and joins; Cassandra is strong for predictable distributed reads and writes."
     - Expected result: students can name one strength of each.
-12. Benchmark
-    - Say: "These numbers are measured locally and are not production claims."
-    - Expected result: local insert and lookup measurements appear.
-
-## Two-hour Tutorial Mode timeline
+## Two-hour tutorial timeline
 
 - 0:00-0:10: Start Docker and open the app.
-- 0:10-0:20: Cassandra and wide-column concepts.
+- 0:10-0:20: Interactive clickstream demo and Cassandra concepts.
 - 0:20-0:35: Create keyspace and schema.
 - 0:35-0:45: Load data and verify row counts.
 - 0:45-1:05: Run user, type, error, and device queries in cqlsh.
