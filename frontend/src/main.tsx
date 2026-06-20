@@ -69,6 +69,7 @@ function App() {
 function InteractiveDemo() {
   const [events, setEvents] = useState<DemoEvent[]>([]);
   const [selectedTable, setSelectedTable] = useState("events_by_user");
+  const [selectedQuestion, setSelectedQuestion] = useState("user");
   const latest = events[0];
   const tableRows = useMemo(() => events.filter((event) => event.tableCopies.includes(selectedTable)), [events, selectedTable]);
 
@@ -89,64 +90,153 @@ function InteractiveDemo() {
   };
 
   return (
-    <section className="demoLayout">
-      <div className="panel appMock">
-        <p className="eyebrow">Fictional app</p>
-        <h2>Campus shop</h2>
+    <section className="demoScroll">
+      <article className="demoSection introSection">
+        <div>
+          <p className="eyebrow">30 minute demo</p>
+          <h2>From shop click to Cassandra table</h2>
+          <p>Scroll down. Each stop isolates one idea students will later build by hand.</p>
+        </div>
+        <div className="demoMiniMap">
+          {["Actions", "Event", "Copies", "Queries", "Partitions", "Limits"].map((item) => <span key={item}>{item}</span>)}
+        </div>
+      </article>
+
+      <article className="demoSection">
+        <div className="sectionLead">
+          <p className="eyebrow">1. Use case</p>
+          <h2>Students use a campus shop</h2>
+          <p>Click a user action. Each click becomes one activity event.</p>
+        </div>
         <div className="phone">
           <div className="phoneTop">Student store</div>
-          <div className="product">Hoodie · Coffee card · Notebook</div>
+          <div className="product">Hoodie | Coffee card | Notebook</div>
           <div className="actionGrid">
             {demoActions.map((action) => <button key={action.type} onClick={() => createEvent(action)}>{action.label}</button>)}
           </div>
         </div>
-      </div>
+      </article>
 
-      <div className="pipeline">
-        <div className="pipeNode">Clickstream event</div>
-        <div className="pipeArrow">{"->"}</div>
-        <div className="pipeNode">Backend writes copies</div>
-        <div className="pipeArrow">{"->"}</div>
-        <div className="pipeNode">Query tables</div>
-      </div>
-
-      <div className="panel">
-        <p className="eyebrow">Latest event</p>
+      <article className="demoSection">
+        <div className="sectionLead">
+          <p className="eyebrow">2. Event shape</p>
+          <h2>A clickstream row is small and predictable</h2>
+          <p>The app records who, what, where, and whether it succeeded.</p>
+        </div>
         {latest ? (
-          <div className="eventCard">
+          <div className="eventCard bigEvent">
             <b>{latest.type}</b>
             <span>{latest.user}</span>
             <span>{latest.device}</span>
             <span>{latest.service}</span>
+            <span>{latest.amount ? `EUR ${latest.amount}` : "no amount"}</span>
             <span className={latest.status === "failed" ? "badBadge" : "okBadge"}>{latest.status}</span>
           </div>
-        ) : <div className="empty">Click an action to generate an event.</div>}
-      </div>
+        ) : <div className="empty">Use the shop actions above first.</div>}
+      </article>
 
-      <div className="panel tableMap">
-        <p className="eyebrow">Cassandra writes</p>
-        <div className="tableButtons">
-          {demoTables.map((table) => (
-            <button key={table.name} className={selectedTable === table.name ? "selected" : ""} onClick={() => setSelectedTable(table.name)}>
-              {table.name}
+      <article className="demoSection">
+        <div className="sectionLead">
+          <p className="eyebrow">3. Denormalization</p>
+          <h2>One event, several query tables</h2>
+          <p>Cassandra duplicates writes so reads can stay simple.</p>
+        </div>
+        <div className="copyFlow">
+          <div className="copySource">{latest ? latest.type : "event"}</div>
+          <div className="copyTargets">
+            {demoTables.map((table) => (
+              <button
+                key={table.name}
+                className={latest?.tableCopies.includes(table.name) ? "lit" : ""}
+                onClick={() => setSelectedTable(table.name)}
+              >
+                {table.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      </article>
+
+      <article className="demoSection">
+        <div className="sectionLead">
+          <p className="eyebrow">4. Query-first modelling</p>
+          <h2>Pick the question before the table</h2>
+          <p>Different questions need different partition keys.</p>
+        </div>
+        <div className="questionBoard">
+          {[
+            ["user", "What did user_001 do today?", "events_by_user", "(user_id, event_date)"],
+            ["type", "Show recent purchases.", "events_by_type", "(event_type, event_date)"],
+            ["device", "What happened on device_07?", "events_by_device", "(device_id, event_date)"],
+            ["service", "Which checkout errors happened?", "errors_by_service", "(service, event_date)"]
+          ].map(([id, question, table, key]) => (
+            <button className={selectedQuestion === id ? "selected" : ""} key={id} onClick={() => { setSelectedQuestion(id); setSelectedTable(table); }}>
+              <b>{question}</b>
+              <span>{table}</span>
+              <em>{key}</em>
             </button>
           ))}
         </div>
-        <div className="selectedTable">
-          <h2>{selectedTable}</h2>
+      </article>
+
+      <article className="demoSection">
+        <div className="sectionLead">
+          <p className="eyebrow">5. Partition</p>
+          <h2>A good query lands in one bucket</h2>
+          <p>{selectedTable} groups rows by {demoTables.find((table) => table.name === selectedTable)?.key}.</p>
+        </div>
+        <div className="partitionViz">
+          {["2026-06-17", "2026-06-18", "2026-06-19"].map((day, index) => (
+            <div className={index === 1 ? "bucket activeBucket" : "bucket"} key={day}>
+              <b>{day}</b>
+              <span>{index === 1 ? selectedTable : "other partition"}</span>
+              <div className="bucketRows">
+                {Array.from({ length: index === 1 ? Math.max(2, tableRows.length || 3) : 2 }, (_, i) => <i key={i} />)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article className="demoSection">
+        <div className="sectionLead">
+          <p className="eyebrow">6. Table contents</p>
+          <h2>Look inside the selected query table</h2>
           <p>{demoTables.find((table) => table.name === selectedTable)?.query}</p>
+        </div>
+        <div className="selectedTable wideTable">
           <div className="labels"><span className="partition">{demoTables.find((table) => table.name === selectedTable)?.key}</span></div>
           <MiniRows rows={tableRows} />
         </div>
-      </div>
+      </article>
 
-      <div className="panel">
-        <p className="eyebrow">Trade-off</p>
+      <article className="demoSection">
+        <div className="sectionLead">
+          <p className="eyebrow">7. Boundary</p>
+          <h2>Not every question belongs here</h2>
+          <p>Global flexible reporting is not what these tables were designed for.</p>
+        </div>
+        <div className="badQueryBoard">
+          <CodeBlock>{`SELECT *
+FROM events_by_type
+WHERE event_type = 'purchase'
+  AND amount > 100
+ALLOW FILTERING;`}</CodeBlock>
+          <div className="warning">Wrong shape: this asks Cassandra to scan/filter instead of reading one known partition.</div>
+        </div>
+      </article>
+
+      <article className="demoSection">
+        <div className="sectionLead">
+          <p className="eyebrow">8. Trade-off</p>
+          <h2>Cassandra and SQL answer different needs</h2>
+          <p>Cassandra favors predictable partition reads; SQL favors flexible reporting.</p>
+        </div>
         <div className="compare">
           <div><b>Cassandra</b><CodeBlock>{sqlComparison.cassandra}</CodeBlock></div>
           <div><b>SQL</b><CodeBlock>{sqlComparison.sql}</CodeBlock></div>
         </div>
-      </div>
+      </article>
     </section>
   );
 }

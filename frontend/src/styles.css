@@ -268,15 +268,56 @@ label {
   margin: 14px 0;
 }
 
-.demoLayout {
+.demoScroll {
   display: grid;
-  grid-template-columns: minmax(260px, 0.8fr) minmax(280px, 1.1fr);
-  gap: 18px;
-  align-items: stretch;
+  gap: 22px;
 }
 
-.appMock {
-  grid-row: span 2;
+.demoSection {
+  min-height: 560px;
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(320px, 1fr);
+  gap: 26px;
+  align-items: center;
+  background: white;
+  border: 1px solid #d9e1ee;
+  border-radius: 8px;
+  padding: 28px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.introSection {
+  min-height: 420px;
+  grid-template-columns: 1fr;
+  align-content: center;
+}
+
+.introSection h2 {
+  font-size: 44px;
+  max-width: 900px;
+}
+
+.sectionLead {
+  align-self: center;
+}
+
+.sectionLead h2 {
+  font-size: 34px;
+}
+
+.demoMiniMap {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.demoMiniMap span {
+  background: #eef6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 14px;
+  font-weight: 800;
+  text-align: center;
 }
 
 .phone {
@@ -344,6 +385,11 @@ label {
   gap: 10px;
 }
 
+.bigEvent {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  font-size: 18px;
+}
+
 .eventCard span, .eventCard b {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
@@ -356,6 +402,109 @@ label {
 
 .tableMap {
   grid-row: span 2;
+}
+
+.copyFlow {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.45fr) minmax(260px, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.copySource {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #0f172a;
+  color: white;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.copyTargets {
+  display: grid;
+  gap: 10px;
+}
+
+.copyTargets button {
+  background: #64748b;
+  justify-content: flex-start;
+}
+
+.copyTargets button.lit {
+  background: #2563eb;
+}
+
+.questionBoard {
+  display: grid;
+  gap: 12px;
+}
+
+.questionBoard button {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 0.9fr;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #172033;
+  justify-content: stretch;
+}
+
+.questionBoard button.selected {
+  background: #dbeafe;
+  border-color: #60a5fa;
+}
+
+.questionBoard em {
+  color: #1d4ed8;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.partitionViz {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.bucket {
+  min-height: 250px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 14px;
+  background: #f8fafc;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.activeBucket {
+  background: #eef6ff;
+  border-color: #60a5fa;
+}
+
+.bucketRows {
+  display: grid;
+  gap: 8px;
+}
+
+.bucketRows i {
+  display: block;
+  height: 18px;
+  border-radius: 999px;
+  background: #93c5fd;
+}
+
+.wideTable {
+  width: 100%;
+}
+
+.badQueryBoard {
+  display: grid;
+  gap: 14px;
 }
 
 .tableButtons {
@@ -450,7 +599,11 @@ th {
   .app { grid-template-columns: 1fr; }
   .sidebar { position: relative; height: auto; }
   .two { grid-template-columns: 1fr; }
-  .demoLayout { grid-template-columns: 1fr; }
+  .demoSection { grid-template-columns: 1fr; min-height: auto; }
+  .demoMiniMap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .copyFlow { grid-template-columns: 1fr; }
+  .questionBoard button { grid-template-columns: 1fr; }
+  .partitionViz { grid-template-columns: 1fr; }
   .pipeline { grid-template-columns: 1fr; }
   .pipeArrow { text-align: center; }
   .compare { grid-template-columns: 1fr; }

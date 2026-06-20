@@ -39,8 +39,8 @@ Keep this terminal open while you work. Open a second terminal for the commands 
 ## What To Do In The App
 
 1. Start with **Demo: what we build**.
-2. Click the fake shop actions: Login, View product, Search, Purchase, Checkout error.
-3. Watch how one event is copied into Cassandra query tables.
+2. Scroll through the mini-topics: shop actions, event shape, table copies, query-first modelling, partitions, limits, and SQL comparison.
+3. Try the small interactions in each section.
 4. Move through the tutorial steps in the sidebar.
 5. Copy the terminal and CQL snippets from the app and run them yourself.
 
