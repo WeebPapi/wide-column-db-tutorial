@@ -109,8 +109,28 @@ function InteractiveDemo() {
           <p>Click a user action. Each click becomes one activity event.</p>
         </div>
         <div className="phone">
-          <div className="phoneTop">Student store</div>
-          <div className="product">Hoodie | Coffee card | Notebook</div>
+          <div className="phoneTop">
+            <span>Campus Shop</span>
+            <small>logged in as user_001</small>
+          </div>
+          <div className="productGrid" aria-label="Mock product cards">
+            <div className="productCard">
+              <div className="productImage hoodie" />
+              <b>SRH Hoodie</b>
+              <span>EUR 49.90</span>
+            </div>
+            <div className="productCard">
+              <div className="productImage coffee" />
+              <b>Coffee Card</b>
+              <span>EUR 12.00</span>
+            </div>
+            <div className="productCard">
+              <div className="productImage notebook" />
+              <b>Notebook</b>
+              <span>EUR 4.50</span>
+            </div>
+          </div>
+          <div className="phoneHint">Click these app actions to create demo events</div>
           <div className="actionGrid">
             {demoActions.map((action) => <button key={action.type} onClick={() => createEvent(action)}>{action.label}</button>)}
           </div>
@@ -125,12 +145,12 @@ function InteractiveDemo() {
         </div>
         {latest ? (
           <div className="eventCard bigEvent">
-            <b>{latest.type}</b>
-            <span>{latest.user}</span>
-            <span>{latest.device}</span>
-            <span>{latest.service}</span>
-            <span>{latest.amount ? `EUR ${latest.amount}` : "no amount"}</span>
-            <span className={latest.status === "failed" ? "badBadge" : "okBadge"}>{latest.status}</span>
+            <Field label="event_type" value={latest.type} strong />
+            <Field label="user_id" value={latest.user} />
+            <Field label="device_id" value={latest.device} />
+            <Field label="service" value={latest.service} />
+            <Field label="amount" value={latest.amount ? `EUR ${latest.amount}` : "none"} />
+            <Field label="status" value={latest.status} tone={latest.status === "failed" ? "bad" : "ok"} />
           </div>
         ) : <div className="empty">Use the shop actions above first.</div>}
       </article>
@@ -142,8 +162,12 @@ function InteractiveDemo() {
           <p>Cassandra duplicates writes so reads can stay simple.</p>
         </div>
         <div className="copyFlow">
-          <div className="copySource">{latest ? latest.type : "event"}</div>
+          <div className="copySource">
+            <span>Logical event</span>
+            <b>{latest ? latest.type : "event"}</b>
+          </div>
           <div className="copyTargets">
+            <div className="visualLabel">Tables receiving a copy</div>
             {demoTables.map((table) => (
               <button
                 key={table.name}
@@ -164,6 +188,11 @@ function InteractiveDemo() {
           <p>Different questions need different partition keys.</p>
         </div>
         <div className="questionBoard">
+          <div className="questionHeader">
+            <span>Application question</span>
+            <span>Cassandra table</span>
+            <span>Partition key</span>
+          </div>
           {[
             ["user", "What did user_001 do today?", "events_by_user", "(user_id, event_date)"],
             ["type", "Show recent purchases.", "events_by_type", "(event_type, event_date)"],
@@ -186,10 +215,12 @@ function InteractiveDemo() {
           <p>{selectedTable} groups rows by {demoTables.find((table) => table.name === selectedTable)?.key}.</p>
         </div>
         <div className="partitionViz">
+          <div className="visualLabel fullSpan">Partition buckets for selected table</div>
           {["2026-06-17", "2026-06-18", "2026-06-19"].map((day, index) => (
             <div className={index === 1 ? "bucket activeBucket" : "bucket"} key={day}>
-              <b>{day}</b>
-              <span>{index === 1 ? selectedTable : "other partition"}</span>
+              <b>{index === 1 ? "Target partition" : "Other partition"}</b>
+              <span>{day}</span>
+              <em>{index === 1 ? selectedTable : "not read by this query"}</em>
               <div className="bucketRows">
                 {Array.from({ length: index === 1 ? Math.max(2, tableRows.length || 3) : 2 }, (_, i) => <i key={i} />)}
               </div>
@@ -205,6 +236,8 @@ function InteractiveDemo() {
           <p>{demoTables.find((table) => table.name === selectedTable)?.query}</p>
         </div>
         <div className="selectedTable wideTable">
+          <div className="visualLabel">Selected query table</div>
+          <h3>{selectedTable}</h3>
           <div className="labels"><span className="partition">{demoTables.find((table) => table.name === selectedTable)?.key}</span></div>
           <MiniRows rows={tableRows} />
         </div>
@@ -245,6 +278,12 @@ function MiniRows({ rows }: { rows: DemoEvent[] }) {
   if (!rows.length) return <div className="empty">No copied rows for this table yet.</div>;
   return (
     <div className="miniRows">
+      <div className="miniRow miniRowHeader">
+        <span>user_id</span>
+        <span>event_type</span>
+        <span>device_id</span>
+        <span>service</span>
+      </div>
       {rows.map((row) => (
         <div className="miniRow" key={`${row.id}-${row.type}`}>
           <span>{row.user}</span>
@@ -253,6 +292,15 @@ function MiniRows({ rows }: { rows: DemoEvent[] }) {
           <span>{row.service}</span>
         </div>
       ))}
+    </div>
+  );
+}
+
+function Field({ label, value, strong, tone }: { label: string; value: string; strong?: boolean; tone?: "ok" | "bad" }) {
+  return (
+    <div className={`fieldChip ${tone === "ok" ? "okBadge" : tone === "bad" ? "badBadge" : ""}`}>
+      <small>{label}</small>
+      {strong ? <b>{value}</b> : <span>{value}</span>}
     </div>
   );
 }

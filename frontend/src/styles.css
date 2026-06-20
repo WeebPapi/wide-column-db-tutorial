@@ -337,18 +337,60 @@ label {
   border-radius: 12px;
   padding: 12px;
   font-weight: 800;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
 }
 
-.product {
-  min-height: 120px;
+.phoneTop small {
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.productCard {
+  min-height: 148px;
   border: 1px solid #cbd5e1;
   border-radius: 12px;
   background: white;
+  padding: 10px;
   display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 16px;
+  gap: 8px;
+  align-content: start;
+}
+
+.productCard b {
+  font-size: 13px;
+}
+
+.productCard span {
+  color: #475569;
+  font-size: 12px;
+}
+
+.productImage {
+  height: 64px;
+  border-radius: 10px;
+}
+
+.hoodie { background: linear-gradient(135deg, #2563eb, #93c5fd); }
+.coffee { background: linear-gradient(135deg, #0f766e, #99f6e4); }
+.notebook { background: linear-gradient(135deg, #7c2d12, #fed7aa); }
+
+.phoneHint {
+  font-size: 13px;
   font-weight: 800;
+  color: #475569;
+  background: #eef6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 9px;
 }
 
 .actionGrid {
@@ -397,6 +439,27 @@ label {
   padding: 10px;
 }
 
+.fieldChip {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.fieldChip small {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.fieldChip b, .fieldChip span {
+  font-size: 18px;
+  font-weight: 800;
+}
+
 .okBadge { color: #166534; }
 .badBadge { color: #991b1b; }
 
@@ -418,13 +481,35 @@ label {
   border-radius: 8px;
   background: #0f172a;
   color: white;
-  font-size: 24px;
   font-weight: 900;
+  text-align: center;
+  padding: 18px;
+}
+
+.copySource span {
+  color: #cbd5e1;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.copySource b {
+  font-size: 28px;
 }
 
 .copyTargets {
   display: grid;
   gap: 10px;
+}
+
+.visualLabel {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.fullSpan {
+  grid-column: 1 / -1;
 }
 
 .copyTargets button {
@@ -439,6 +524,16 @@ label {
 .questionBoard {
   display: grid;
   gap: 12px;
+}
+
+.questionHeader {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr 0.9fr;
+  gap: 12px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .questionBoard button {
@@ -479,6 +574,12 @@ label {
   display: grid;
   align-content: start;
   gap: 10px;
+}
+
+.bucket em {
+  color: #475569;
+  font-style: normal;
+  font-weight: 700;
 }
 
 .activeBucket {
@@ -527,6 +628,10 @@ label {
   padding-top: 16px;
 }
 
+.selectedTable h3 {
+  margin: 8px 0 8px;
+}
+
 .miniRows {
   display: grid;
   gap: 8px;
@@ -541,6 +646,14 @@ label {
   padding: 10px;
   background: #f8fafc;
   font-size: 14px;
+}
+
+.miniRowHeader {
+  background: #e2e8f0;
+  color: #334155;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 12px;
 }
 
 .compare {
@@ -602,7 +715,9 @@ th {
   .demoSection { grid-template-columns: 1fr; min-height: auto; }
   .demoMiniMap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .copyFlow { grid-template-columns: 1fr; }
+  .productGrid { grid-template-columns: 1fr; }
   .questionBoard button { grid-template-columns: 1fr; }
+  .questionHeader { display: none; }
   .partitionViz { grid-template-columns: 1fr; }
   .pipeline { grid-template-columns: 1fr; }
   .pipeArrow { text-align: center; }
