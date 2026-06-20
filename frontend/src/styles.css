@@ -460,6 +460,16 @@ label {
   font-weight: 800;
 }
 
+.fieldChip.badBadge {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.fieldChip.okBadge {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
 .okBadge { color: #166534; }
 .badBadge { color: #991b1b; }
 

@@ -149,7 +149,11 @@ function InteractiveDemo() {
             <Field label="user_id" value={latest.user} />
             <Field label="device_id" value={latest.device} />
             <Field label="service" value={latest.service} />
-            <Field label="amount" value={latest.amount ? `EUR ${latest.amount}` : "none"} />
+            <Field
+              label="amount"
+              value={latest.amount ? `EUR ${latest.amount}` : "not stored for this event type"}
+              tone={latest.amount ? undefined : "bad"}
+            />
             <Field label="status" value={latest.status} tone={latest.status === "failed" ? "bad" : "ok"} />
           </div>
         ) : <div className="empty">Use the shop actions above first.</div>}
