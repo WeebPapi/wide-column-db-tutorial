@@ -1,108 +1,154 @@
 # Campus Shop Clickstream with Apache Cassandra
 
-A self-contained university final project about wide-column databases using Apache Cassandra.
+This repo contains a local Cassandra tutorial app for a university project on wide-column databases.
 
-The specific topic is **Campus Shop Clickstream**: modelling user activity history, purchases, device activity, and service errors for a fictional student shopping app.
+The topic is **Campus Shop Clickstream**: a fictional student shop records logins, product views, searches, purchases, device activity, and checkout errors. The app first shows an interactive demo of how events become Cassandra rows, then guides you through setting up and querying Cassandra yourself.
 
-The website has one flow for everybody: an interactive demo of the use case, followed by a hands-on tutorial with terminal and CQL snippets. Students still run Cassandra commands themselves with Docker and `cqlsh`.
+## What You Need
 
-## One-command startup
+- Docker Desktop
+- Git
+- A terminal: PowerShell, Terminal, Git Bash, or similar
+- A laptop with enough memory for one Cassandra container
+
+You do not need to install Cassandra locally. Docker runs it for you.
+
+## Start The Project
+
+Clone the repo:
+
+```bash
+git clone https://github.com/WeebPapi/wide-column-db-tutorial.git
+cd wide-column-db-tutorial
+```
+
+Start everything:
 
 ```bash
 docker compose up --build
 ```
 
-Open:
+Open the app:
 
 ```text
 http://localhost:3000
 ```
 
-First run:
+Keep this terminal open while you work. Open a second terminal for the commands shown inside the tutorial.
 
-1. Use the interactive demo to see how app actions become Cassandra rows.
-2. Follow the tutorial steps in the left sidebar.
-3. Run the shown Docker and `cqlsh` commands in your terminal.
+## What To Do In The App
 
-## Prerequisites
+1. Start with **Demo: what we build**.
+2. Click the fake shop actions: Login, View product, Search, Purchase, Checkout error.
+3. Watch how one event is copied into Cassandra query tables.
+4. Move through the tutorial steps in the sidebar.
+5. Copy the terminal and CQL snippets from the app and run them yourself.
 
-- Docker Desktop
-- Git
-- A laptop with enough memory for one Cassandra container
+The website is a guide, not a replacement for your terminal.
 
-## URLs
+## Useful URLs
 
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000/api/health
-- Cassandra native port: localhost:9042
+- App: http://localhost:3000
+- Backend health check: http://localhost:8000/api/health
+- Cassandra port: `localhost:9042`
 
-## Vercel preview
+## If Cassandra Is Not Ready
 
-Vercel can host the interactive guide for online review. The deployed site uses mock data. The real Cassandra lab runs locally through Docker Compose.
+Cassandra often needs 60-90 seconds after Docker starts.
 
-## Architecture
+Check containers:
 
-```text
-Browser
-  -> React/Vite frontend
-  -> FastAPI backend
-  -> Apache Cassandra 4.1
+```bash
+docker compose ps
 ```
 
-## Services
+Try cqlsh:
 
-- `frontend`: guided lab UI with command snippets and optional checks.
-- `backend`: FastAPI API for sample data loading, query checks, and validation helpers.
-- `cassandra`: single local Cassandra node for classroom use.
+```bash
+docker compose exec cassandra cqlsh -e "DESCRIBE KEYSPACES"
+```
 
-Production Cassandra normally runs as a multi-node cluster. This project uses one node to keep the classroom setup manageable.
+If it fails, wait 30 seconds and run the command again.
 
-## Reset
+## If The App Does Not Open
 
-From the terminal:
+Make sure Docker is still running:
+
+```bash
+docker compose ps
+```
+
+Check frontend logs:
+
+```bash
+docker compose logs frontend
+```
+
+If port `3000` is already used by another app, stop that app or change the frontend port in `docker-compose.yml`.
+
+## If The Backend Fails
+
+Check backend logs:
+
+```bash
+docker compose logs backend
+```
+
+Check the health endpoint:
+
+```bash
+curl http://localhost:8000/api/health
+```
+
+If Cassandra is still starting, backend errors may clear after Cassandra becomes ready.
+
+## Reset Everything
+
+This deletes the Cassandra Docker volume and starts clean:
 
 ```bash
 docker compose down -v
 docker compose up --build
 ```
 
-## Demo Section
+Use this if your schema/data gets into a confusing state.
 
-The first section is an interactive Campus Shop clickstream demo. Students click app actions such as login, search, purchase, and checkout error, then see how one logical event is copied into Cassandra query tables.
+## Stop The Project
 
-## Tutorial Section
+Stop containers but keep data:
 
-The tutorial section provides copyable terminal and CQL snippets for Docker startup, Cassandra readiness checks, schema creation, data loading, manual queries, bad-query discussion, GenAI critique, and SQL comparison.
+```bash
+docker compose down
+```
 
-## Common Errors
+Stop containers and delete data:
 
-- Cassandra disconnected: wait 60-90 seconds and click Refresh.
-- Backend unavailable: check `docker compose logs backend`.
-- Port conflict: free ports 3000, 8000, or 9042.
-- Empty query results: load demo data, then use one of the dates returned by `/api/data/load`.
+```bash
+docker compose down -v
+```
 
 ## Project Structure
 
 ```text
-backend/                 FastAPI app and tests
-frontend/                React/Vite workshop UI
-cassandra/               Inspectable CQL schema/reset files
-scripts/                 data, benchmark, and smoke utilities
-docs/                    project overview and runbook
-tutorial/                exercise handouts and solutions
-relational-comparison/   SQL schema and equivalent query examples
+frontend/                React guide app
+backend/                 FastAPI helper API
+cassandra/               Keyspace, schema, seed notes, reset CQL
+tutorial/                Student exercises, solutions, troubleshooting
+relational-comparison/   SQL comparison examples
+scripts/                 Optional helper scripts
+data/                    Generated data notes
 ```
 
-## Testing
+## Optional Checks
 
-Backend unit tests:
+Backend tests:
 
 ```bash
 cd backend
-pytest
+py -3.12 -m pytest
 ```
 
-Live smoke test after `docker compose up --build`:
+Live smoke test after the Docker stack is running:
 
 ```bash
 python scripts/smoke_test.py
