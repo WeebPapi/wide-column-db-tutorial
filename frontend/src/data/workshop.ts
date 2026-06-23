@@ -12,10 +12,10 @@ export const projectTopic = "Campus Shop Clickstream";
 
 export const demoActions = [
   { type: "login", label: "Login", service: "auth", device: "device_03", tableCopies: ["events_by_user", "events_by_type", "events_by_device"] },
-  { type: "page_view", label: "View product", service: "catalog", device: "device_03", tableCopies: ["events_by_user", "events_by_type", "events_by_device"] },
-  { type: "search", label: "Search", service: "search", device: "device_07", tableCopies: ["events_by_user", "events_by_type", "events_by_device"] },
-  { type: "purchase", label: "Purchase", service: "checkout", device: "device_07", tableCopies: ["events_by_user", "events_by_type", "events_by_device"] },
-  { type: "error", label: "Checkout error", service: "checkout", device: "device_07", tableCopies: ["events_by_user", "events_by_type", "events_by_device", "errors_by_service"] }
+  { type: "page_view", label: "View product", service: "catalog", device: "device_03", extra: { label: "product_id", value: "hoodie_srh_01" }, tableCopies: ["events_by_user", "events_by_type", "events_by_device"] },
+  { type: "search", label: "Search", service: "search", device: "device_07", extra: { label: "search_term", value: "coffee" }, tableCopies: ["events_by_user", "events_by_type", "events_by_device"] },
+  { type: "purchase", label: "Purchase", service: "checkout", device: "device_07", extra: { label: "amount", value: "EUR 49.90" }, tableCopies: ["events_by_user", "events_by_type", "events_by_device"] },
+  { type: "error", label: "Checkout error", service: "checkout", device: "device_07", extra: { label: "error_code", value: "PAYMENT_TIMEOUT" }, tableCopies: ["events_by_user", "events_by_type", "events_by_device", "errors_by_service"] }
 ];
 
 export const demoTables = [
@@ -30,7 +30,7 @@ export const tutorialSteps: LabStep[] = [
     title: "Start Docker",
     goal: "Start the local stack.",
     explanation: "Run Cassandra, the backend helper API, and this guide.",
-    commands: ["docker compose up --build"],
+    commands: ["docker compose up -d"],
     expected: "The frontend opens at http://localhost:3000. Cassandra may take 60-90 seconds."
   },
   {

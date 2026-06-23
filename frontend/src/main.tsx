@@ -12,7 +12,10 @@ type DemoEvent = {
   service: string;
   device: string;
   status: string;
-  amount: string;
+  extra?: {
+    label: string;
+    value: string;
+  };
   tableCopies: string[];
 };
 
@@ -82,7 +85,7 @@ function InteractiveDemo() {
       service: action.service,
       device: action.device,
       status: action.type === "error" ? "failed" : "ok",
-      amount: action.type === "purchase" ? "49.90" : "",
+      extra: action.extra,
       tableCopies: action.tableCopies
     };
     setEvents([event, ...events].slice(0, 8));
@@ -95,17 +98,95 @@ function InteractiveDemo() {
         <div>
           <p className="eyebrow">30 minute demo</p>
           <h2>From shop click to Cassandra table</h2>
-          <p>Scroll down. Each stop isolates one idea students will later build by hand.</p>
+          <p>Scroll down. Each stop isolates one idea you will later build by hand.</p>
         </div>
         <div className="demoMiniMap">
-          {["Actions", "Event", "Copies", "Queries", "Partitions", "Limits"].map((item) => <span key={item}>{item}</span>)}
+          {["Compose", "Actions", "Event", "Copies", "Queries", "Partitions", "Limits"].map((item) => <span key={item}>{item}</span>)}
+        </div>
+      </article>
+
+      <article className="demoSection composeSection">
+        <div className="sectionLead">
+          <p className="eyebrow">1. Local stack</p>
+          <h2>Docker Compose starts the classroom system</h2>
+          <p>Before any CQL, you should know which containers are running and how the app reaches Cassandra.</p>
+        </div>
+        <div className="composeBoard">
+          <div className="visualLabel">docker compose up -d</div>
+          <div className="composeColumns">
+            <div className="composeColumn">
+              <div className="composeService frontendService">
+                <b>frontend</b>
+                <span>React guide</span>
+                <em>localhost:3000</em>
+              </div>
+              <div className="composeConnection">frontend {"->"} HTTP API {"->"} backend</div>
+              <div className="composeDetail">
+                <b>Browser entry point</b>
+                <span>You open the guide at localhost:3000</span>
+              </div>
+              <div className="composeSnippet">
+                <b>frontend service</b>
+                <CodeBlock>{`frontend:
+  build: ./frontend
+  ports:
+    - "3000:3000"
+  depends_on:
+    - backend`}</CodeBlock>
+              </div>
+            </div>
+            <div className="composeColumn">
+              <div className="composeService backendService">
+                <b>backend</b>
+                <span>FastAPI helper</span>
+                <em>localhost:8000</em>
+              </div>
+              <div className="composeConnection">backend {"->"} Cassandra driver {"->"} cassandra</div>
+              <div className="composeDetail">
+                <b>Connection settings</b>
+                <span>CASSANDRA_HOSTS points to the cassandra service name</span>
+              </div>
+              <div className="composeSnippet">
+                <b>backend service</b>
+                <CodeBlock>{`backend:
+  build: ./backend
+  environment:
+    CASSANDRA_HOSTS: cassandra
+    CASSANDRA_KEYSPACE: activity_tracking
+  ports:
+    - "8000:8000"`}</CodeBlock>
+              </div>
+            </div>
+            <div className="composeColumn">
+              <div className="composeService cassandraService">
+                <b>cassandra</b>
+                <span>wide-column database</span>
+                <em>localhost:9042</em>
+              </div>
+              <div className="composeConnection">cqlsh {"->"} localhost:9042</div>
+              <div className="composeDetail">
+                <b>Data and CQL files</b>
+                <span>cassandra-data persists rows; ./cassandra mounts lab scripts</span>
+              </div>
+              <div className="composeSnippet">
+                <b>cassandra service</b>
+                <CodeBlock>{`cassandra:
+  image: cassandra:4.1.5
+  ports:
+    - "9042:9042"
+  volumes:
+    - cassandra-data:/var/lib/cassandra
+    - ./cassandra:/workspace/cassandra:ro`}</CodeBlock>
+              </div>
+            </div>
+          </div>
         </div>
       </article>
 
       <article className="demoSection">
         <div className="sectionLead">
-          <p className="eyebrow">1. Use case</p>
-          <h2>Students use a campus shop</h2>
+          <p className="eyebrow">2. Use case</p>
+          <h2>You use a campus shop</h2>
           <p>Click a user action. Each click becomes one activity event.</p>
         </div>
         <div className="phone">
@@ -139,7 +220,7 @@ function InteractiveDemo() {
 
       <article className="demoSection">
         <div className="sectionLead">
-          <p className="eyebrow">2. Event shape</p>
+          <p className="eyebrow">3. Event shape</p>
           <h2>A clickstream row is small and predictable</h2>
           <p>The app records who, what, where, and whether it succeeded.</p>
         </div>
@@ -149,11 +230,11 @@ function InteractiveDemo() {
             <Field label="user_id" value={latest.user} />
             <Field label="device_id" value={latest.device} />
             <Field label="service" value={latest.service} />
-            <Field
-              label="amount"
-              value={latest.amount ? `EUR ${latest.amount}` : "not stored for this event type"}
-              tone={latest.amount ? undefined : "bad"}
-            />
+            {latest.extra ? (
+              <Field label={latest.extra.label} value={latest.extra.value} />
+            ) : (
+              <Field label="extra_column" value="no action-specific column stored" tone="missing" />
+            )}
             <Field label="status" value={latest.status} tone={latest.status === "failed" ? "bad" : "ok"} />
           </div>
         ) : <div className="empty">Use the shop actions above first.</div>}
@@ -161,7 +242,7 @@ function InteractiveDemo() {
 
       <article className="demoSection">
         <div className="sectionLead">
-          <p className="eyebrow">3. Denormalization</p>
+          <p className="eyebrow">4. Denormalization</p>
           <h2>One event, several query tables</h2>
           <p>Cassandra duplicates writes so reads can stay simple.</p>
         </div>
@@ -187,7 +268,7 @@ function InteractiveDemo() {
 
       <article className="demoSection">
         <div className="sectionLead">
-          <p className="eyebrow">4. Query-first modelling</p>
+          <p className="eyebrow">5. Query-first modelling</p>
           <h2>Pick the question before the table</h2>
           <p>Different questions need different partition keys.</p>
         </div>
@@ -214,7 +295,7 @@ function InteractiveDemo() {
 
       <article className="demoSection">
         <div className="sectionLead">
-          <p className="eyebrow">5. Partition</p>
+          <p className="eyebrow">6. Partition</p>
           <h2>A good query lands in one bucket</h2>
           <p>{selectedTable} groups rows by {demoTables.find((table) => table.name === selectedTable)?.key}.</p>
         </div>
@@ -235,7 +316,7 @@ function InteractiveDemo() {
 
       <article className="demoSection">
         <div className="sectionLead">
-          <p className="eyebrow">6. Table contents</p>
+          <p className="eyebrow">7. Table contents</p>
           <h2>Look inside the selected query table</h2>
           <p>{demoTables.find((table) => table.name === selectedTable)?.query}</p>
         </div>
@@ -249,7 +330,7 @@ function InteractiveDemo() {
 
       <article className="demoSection">
         <div className="sectionLead">
-          <p className="eyebrow">7. Boundary</p>
+          <p className="eyebrow">8. Boundary</p>
           <h2>Not every question belongs here</h2>
           <p>Global flexible reporting is not what these tables were designed for.</p>
         </div>
@@ -265,7 +346,7 @@ ALLOW FILTERING;`}</CodeBlock>
 
       <article className="demoSection">
         <div className="sectionLead">
-          <p className="eyebrow">8. Trade-off</p>
+          <p className="eyebrow">9. Trade-off</p>
           <h2>Cassandra and SQL answer different needs</h2>
           <p>Cassandra favors predictable partition reads; SQL favors flexible reporting.</p>
         </div>
@@ -286,23 +367,23 @@ function MiniRows({ rows }: { rows: DemoEvent[] }) {
         <span>user_id</span>
         <span>event_type</span>
         <span>device_id</span>
-        <span>service</span>
+        <span>action column</span>
       </div>
       {rows.map((row) => (
         <div className="miniRow" key={`${row.id}-${row.type}`}>
           <span>{row.user}</span>
           <span>{row.type}</span>
           <span>{row.device}</span>
-          <span>{row.service}</span>
+          <span>{row.extra ? `${row.extra.label}: ${row.extra.value}` : "none stored"}</span>
         </div>
       ))}
     </div>
   );
 }
 
-function Field({ label, value, strong, tone }: { label: string; value: string; strong?: boolean; tone?: "ok" | "bad" }) {
+function Field({ label, value, strong, tone }: { label: string; value: string; strong?: boolean; tone?: "ok" | "bad" | "missing" }) {
   return (
-    <div className={`fieldChip ${tone === "ok" ? "okBadge" : tone === "bad" ? "badBadge" : ""}`}>
+    <div className={`fieldChip ${tone === "ok" ? "okBadge" : tone === "bad" ? "badBadge" : tone === "missing" ? "missingBadge" : ""}`}>
       <small>{label}</small>
       {strong ? <b>{value}</b> : <span>{value}</span>}
     </div>

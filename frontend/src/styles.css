@@ -305,9 +305,18 @@ label {
   font-size: 34px;
 }
 
+.composeSection {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+.composeSection .sectionLead {
+  max-width: 780px;
+}
+
 .demoMiniMap {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -399,6 +408,117 @@ label {
   gap: 10px;
 }
 
+.composeBoard {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.composeColumns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.composeColumn {
+  display: grid;
+  grid-template-rows: auto auto minmax(96px, auto) 1fr;
+  gap: 12px;
+  min-width: 0;
+}
+
+.composeService {
+  min-height: 148px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 16px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.composeService b {
+  font-size: 26px;
+}
+
+.composeService span {
+  color: #334155;
+  font-weight: 800;
+}
+
+.composeService em {
+  color: #475569;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.frontendService {
+  background: #eef6ff;
+  border-color: #93c5fd;
+}
+
+.backendService {
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.cassandraService {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.composeConnection {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.composeDetail {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.composeDetail span {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.composeSnippet {
+  min-width: 0;
+}
+
+.composeSnippet b {
+  color: #334155;
+  display: block;
+  font-size: 13px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.composeSnippet .code {
+  font-size: 12px;
+  margin: 0;
+  white-space: pre-wrap;
+  height: 100%;
+}
+
 .pipeline {
   grid-column: 1 / -1;
   display: grid;
@@ -432,7 +552,7 @@ label {
   font-size: 18px;
 }
 
-.eventCard span, .eventCard b {
+.eventCard > span, .eventCard > b {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -446,6 +566,7 @@ label {
   padding: 12px;
   display: grid;
   gap: 6px;
+  min-width: 0;
 }
 
 .fieldChip small {
@@ -458,6 +579,9 @@ label {
 .fieldChip b, .fieldChip span {
   font-size: 18px;
   font-weight: 800;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .fieldChip.badBadge {
@@ -470,8 +594,15 @@ label {
   border-color: #86efac;
 }
 
+.fieldChip.missingBadge {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  border-style: dashed;
+}
+
 .okBadge { color: #166534; }
 .badBadge { color: #991b1b; }
+.missingBadge { color: #475569; }
 
 .tableMap {
   grid-row: span 2;
@@ -724,6 +855,9 @@ th {
   .two { grid-template-columns: 1fr; }
   .demoSection { grid-template-columns: 1fr; min-height: auto; }
   .demoMiniMap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .composeColumns { grid-template-columns: 1fr; }
+  .composeColumn { grid-template-rows: auto; }
+  .composeConnection { text-align: left; }
   .copyFlow { grid-template-columns: 1fr; }
   .productGrid { grid-template-columns: 1fr; }
   .questionBoard button { grid-template-columns: 1fr; }

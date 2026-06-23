@@ -25,7 +25,7 @@ cd wide-column-db-tutorial
 Start everything:
 
 ```bash
-docker compose up --build
+docker compose up -d
 ```
 
 Open the app:
@@ -34,7 +34,7 @@ Open the app:
 http://localhost:3000
 ```
 
-Keep this terminal open while you work. Open a second terminal for the commands shown inside the tutorial.
+Use the same terminal for the commands shown inside the tutorial.
 
 ## What To Do In The App
 
@@ -108,7 +108,7 @@ This deletes the Cassandra Docker volume and starts clean:
 
 ```bash
 docker compose down -v
-docker compose up --build
+docker compose up -d
 ```
 
 Use this if your schema/data gets into a confusing state.
@@ -133,7 +133,7 @@ docker compose down -v
 frontend/                React guide app
 backend/                 FastAPI helper API
 cassandra/               Keyspace, schema, seed notes, reset CQL
-tutorial/                Student exercises, solutions, troubleshooting
+tutorial/                Exercises, solutions, troubleshooting
 relational-comparison/   SQL comparison examples
 scripts/                 Optional helper scripts
 data/                    Generated data notes
