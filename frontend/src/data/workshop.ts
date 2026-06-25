@@ -76,12 +76,12 @@ export const tutorialSteps: LabStep[] = [
   {
     title: "Load sample data",
     goal: "Generate fictional deterministic clickstream rows.",
-    explanation: "Load fake campus shop events. This replaces old tutorial rows, then loads the same fixed dates for everyone.",
+    explanation: "Click the button to load fake campus shop events. This replaces old tutorial rows, then loads the same fixed dates for everyone.",
     commands: [
       "curl -X POST http://localhost:8000/api/data/load -H \"Content-Type: application/json\" -d \"{\\\"seed\\\":42,\\\"size\\\":\\\"small\\\"}\""
     ],
     cql: ["USE activity_tracking;\nSELECT count(*) FROM events_by_user;"],
-    expected: "The count is greater than zero. The small dataset includes 2026-01-12 through 2026-01-15, so later queries use 2026-01-15."
+    expected: "The button shows a loaded message. The count is greater than zero. The small dataset includes 2026-01-12 through 2026-01-15, so later queries use 2026-01-15."
   },
   {
     title: "Query user history",

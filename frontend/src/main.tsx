@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Check, Clipboard, Database, RotateCcw, Terminal } from "lucide-react";
 import { demoActions, demoTables, LabStep, projectTopic, sqlComparison, tutorialSteps } from "./data/workshop";
 import { CodeBlock } from "./components/CodeBlock";
+import { api } from "./services/api";
 import "./styles.css";
 
 type DemoEvent = {
@@ -397,6 +398,7 @@ function TutorialStep({ step }: { step: LabStep }) {
         <p className="eyebrow">Goal</p>
         <h2>{step.goal}</h2>
         <p>{step.explanation}</p>
+        {step.title === "Load sample data" && <LoadDataButton />}
         {step.commands?.map((command) => (
           <Snippet
             key={command}
@@ -421,6 +423,34 @@ function TutorialStep({ step }: { step: LabStep }) {
   );
 }
 
+function LoadDataButton() {
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  const load = async () => {
+    setStatus("loading");
+    setMessage("");
+    try {
+      const result = await api.loadData(42, "small");
+      const days = Array.isArray(result.days) ? result.days.join(", ") : "sample dates";
+      setStatus("success");
+      setMessage(`Loaded ${result.events ?? "sample"} events for ${days}.`);
+    } catch (error) {
+      setStatus("error");
+      setMessage(error instanceof Error ? error.message : "Could not load sample data.");
+    }
+  };
+
+  return (
+    <div className="actionPanel">
+      <button onClick={load} disabled={status === "loading"}>
+        <Database size={16} /> {status === "loading" ? "Loading..." : "Load sample data"}
+      </button>
+      {message && <div className={status === "success" ? "success" : "error"}>{message}</div>}
+    </div>
+  );
+}
+
 function getCommandSnippet(command: string) {
   if (command.startsWith("SOURCE ")) {
     return {
@@ -438,8 +468,8 @@ function getCommandSnippet(command: string) {
 
   if (command.startsWith("curl ")) {
     return {
-      title: "Run in terminal",
-      hint: "Run this in your normal terminal, not inside cqlsh. It asks the backend to load rows."
+      title: "Backup terminal command",
+      hint: "Use this only if the button does not work. Run it in your normal terminal, not inside cqlsh."
     };
   }
 
