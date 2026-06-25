@@ -246,6 +246,12 @@ label {
   background: #334155;
 }
 
+.snippetHint {
+  color: #64748b;
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+
 .topic {
   color: #334155;
   font-weight: 700;

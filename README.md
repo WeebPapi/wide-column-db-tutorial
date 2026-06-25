@@ -34,7 +34,7 @@ Open the app:
 http://localhost:3000
 ```
 
-Use the same terminal for the commands shown inside the tutorial.
+Use a normal terminal for Docker/API commands. Use the `cqlsh` prompt for Cassandra CQL snippets.
 
 ## What To Do In The App
 
@@ -42,7 +42,7 @@ Use the same terminal for the commands shown inside the tutorial.
 2. Scroll through the mini-topics: shop actions, event shape, table copies, query-first modelling, partitions, limits, and SQL comparison.
 3. Try the small interactions in each section.
 4. Move through the tutorial steps in the sidebar.
-5. Copy the terminal and CQL snippets from the app and run them yourself.
+5. Copy the terminal snippets into your normal terminal, and paste CQL snippets into `cqlsh`.
 
 The website is a guide, not a replacement for your terminal.
 

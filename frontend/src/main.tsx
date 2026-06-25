@@ -397,8 +397,20 @@ function TutorialStep({ step }: { step: LabStep }) {
         <p className="eyebrow">Goal</p>
         <h2>{step.goal}</h2>
         <p>{step.explanation}</p>
-        {step.commands?.map((command) => <Snippet key={command} title="Terminal" value={command} />)}
-        {step.cql?.map((query) => <Snippet key={query} title="CQL / notes" value={query} />)}
+        {step.commands?.map((command) => (
+          <Snippet
+            key={command}
+            {...getCommandSnippet(command)}
+            value={command}
+          />
+        ))}
+        {step.cql?.map((query) => (
+          <Snippet
+            key={query}
+            {...getCqlSnippet(step.title, query)}
+            value={query}
+          />
+        ))}
       </article>
       <aside className="panel">
         <h2>Expected result</h2>
@@ -409,11 +421,117 @@ function TutorialStep({ step }: { step: LabStep }) {
   );
 }
 
-function Snippet({ title, value }: { title: string; value: string }) {
+function getCommandSnippet(command: string) {
+  if (command.startsWith("SOURCE ")) {
+    return {
+      title: "Paste in cqlsh",
+      hint: "Paste this after the cqlsh prompt opens. It runs the saved .cql file for you."
+    };
+  }
+
+  if (command === "docker compose exec cassandra cqlsh" || command === "docker compose exec cassandra cqlsh -k activity_tracking") {
+    return {
+      title: "Run in terminal",
+      hint: "Run this in your normal terminal. It opens cqlsh; keep it open for the CQL snippets."
+    };
+  }
+
+  if (command.startsWith("curl ")) {
+    return {
+      title: "Run in terminal",
+      hint: "Run this in your normal terminal, not inside cqlsh. It asks the backend to load rows."
+    };
+  }
+
+  return {
+    title: "Run in terminal",
+    hint: "Run this in your normal terminal."
+  };
+}
+
+function getCqlSnippet(stepTitle: string, query: string) {
+  if (query.startsWith("SOURCE ")) {
+    return {
+      title: "Paste in cqlsh",
+      hint: "Paste this at the cqlsh prompt. It runs the saved .cql file for you."
+    };
+  }
+
+  if (query.startsWith("CREATE KEYSPACE")) {
+    return {
+      title: "Read-only: file contents",
+      hint: "Do not paste this if you used SOURCE above. This only shows what that file creates.",
+      copyable: false
+    };
+  }
+
+  if (query.startsWith("PRIMARY KEY")) {
+    return {
+      title: "Read-only: schema idea",
+      hint: "Do not paste this. It explains how the table key is structured.",
+      copyable: false
+    };
+  }
+
+  if (query.includes("Anti-pattern:")) {
+    return {
+      title: "Read-only: bad example",
+      hint: "Do not paste this during the walkthrough. It shows the kind of query to avoid.",
+      copyable: false
+    };
+  }
+
+  if (query.startsWith("CREATE TABLE purchases_by_device")) {
+    return {
+      title: "Optional cqlsh command",
+      hint: "Read this as the target design. Paste it in cqlsh only if you want to create the exercise table."
+    };
+  }
+
+  if (query.includes("Checklist:")) {
+    return {
+      title: "Read-only: checklist",
+      hint: "Do not paste this. Use it to check whether the AI answer is good.",
+      copyable: false
+    };
+  }
+
+  if (query.startsWith("DESCRIBE")) {
+    return {
+      title: "Paste in cqlsh",
+      hint: "Paste this at the cqlsh prompt to check what Cassandra can see."
+    };
+  }
+
+  if (query.startsWith("SELECT count(*)")) {
+    return {
+      title: "Paste in cqlsh",
+      hint: "Paste this at the cqlsh prompt to check that rows were loaded."
+    };
+  }
+
+  if (stepTitle.startsWith("Query")) {
+    return {
+      title: "Paste in cqlsh",
+      hint: "Paste this at the cqlsh prompt. Replace <loaded date> with a real date from the load step."
+    };
+  }
+
+  return {
+    title: "Paste in cqlsh",
+    hint: "Paste this at the cqlsh prompt."
+  };
+}
+
+function Snippet({ title, hint, value, copyable = true }: { title: string; hint: string; value: string; copyable?: boolean }) {
   const copy = async () => navigator.clipboard?.writeText(value);
   return (
     <div className="snippet">
-      <div className="snippetHeader"><span><Terminal size={15} /> {title}</span><button onClick={copy}><Clipboard size={15} /> Copy</button></div>
+      <div className="snippetHeader">
+        <span><Terminal size={15} /> {title}</span>
+        {copyable && <button onClick={copy}><Clipboard size={15} /> Copy</button>}
+      </div>
+      <p className="snippetHint">{hint}</p>
       <CodeBlock>{value}</CodeBlock>
     </div>
   );
