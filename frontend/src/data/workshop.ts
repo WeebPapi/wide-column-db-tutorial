@@ -76,32 +76,32 @@ export const tutorialSteps: LabStep[] = [
   {
     title: "Load sample data",
     goal: "Generate fictional deterministic clickstream rows.",
-    explanation: "Load fake campus shop events. The same seed gives the same style of data, so everyone can compare results.",
+    explanation: "Load fake campus shop events. The same seed gives the same data dates, so everyone can compare results.",
     commands: [
       "curl -X POST http://localhost:8000/api/data/load -H \"Content-Type: application/json\" -d \"{\\\"seed\\\":42,\\\"size\\\":\\\"small\\\"}\""
     ],
     cql: ["USE activity_tracking;\nSELECT count(*) FROM events_by_user;"],
-    expected: "The count is greater than zero. Note one loaded date from the JSON response, like 2026-01-15."
+    expected: "The count is greater than zero. The small dataset includes 2026-01-12 through 2026-01-15."
   },
   {
     title: "Query user history",
     goal: "Read one user's activity for one day.",
     explanation: "This gives Cassandra the full partition key: which user and which day. That makes the read direct.",
-    cql: ["USE activity_tracking;\nSELECT user_id, event_date, event_time, event_type, service, device_id\nFROM events_by_user\nWHERE user_id = 'user_001'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
+    cql: ["USE activity_tracking;\nSELECT user_id, event_date, event_time, event_type, service, device_id\nFROM events_by_user\nWHERE user_id = 'user_001'\n  AND event_date = '2026-01-15'\nLIMIT 10;"],
     expected: "Rows return newest first. You should see actions like login, page_view, search, or purchase."
   },
   {
     title: "Query purchases",
     goal: "Use the duplicated event-type table.",
     explanation: "We use a copy of the event data because this question starts with event_type, not user_id.",
-    cql: ["USE activity_tracking;\nSELECT event_type, event_date, event_time, user_id, amount\nFROM events_by_type\nWHERE event_type = 'purchase'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
+    cql: ["USE activity_tracking;\nSELECT event_type, event_date, event_time, user_id, amount\nFROM events_by_type\nWHERE event_type = 'purchase'\n  AND event_date = '2026-01-15'\nLIMIT 10;"],
     expected: "Purchase rows return without scanning every user. Cassandra reads the purchase/date group directly."
   },
   {
     title: "Query checkout errors",
     goal: "Troubleshoot a service.",
     explanation: "When debugging checkout, we start with service and date. This table matches that question.",
-    cql: ["USE activity_tracking;\nSELECT service, event_date, event_time, user_id, device_id, status\nFROM errors_by_service\nWHERE service = 'checkout'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
+    cql: ["USE activity_tracking;\nSELECT service, event_date, event_time, user_id, device_id, status\nFROM errors_by_service\nWHERE service = 'checkout'\n  AND event_date = '2026-01-15'\nLIMIT 10;"],
     expected: "Checkout error rows return for one service/day partition, for example checkout errors on the loaded date."
   },
   {
@@ -131,7 +131,7 @@ export const sqlComparison = {
   cassandra: `SELECT *
 FROM events_by_user
 WHERE user_id = 'user_001'
-  AND event_date = '<loaded date>';`,
+  AND event_date = '2026-01-15';`,
   sql: `SELECT *
 FROM events
 WHERE user_id = 'user_001'

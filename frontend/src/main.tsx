@@ -515,7 +515,7 @@ function getCqlSnippet(stepTitle: string, query: string) {
   if (stepTitle.startsWith("Query")) {
     return {
       title: "Paste in cqlsh",
-      hint: "Paste this at the cqlsh prompt. It selects the keyspace first; replace <loaded date> with a real date from the load step."
+      hint: "Paste this at the cqlsh prompt. It selects the keyspace first and uses a date from the sample data."
     };
   }
 

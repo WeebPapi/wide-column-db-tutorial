@@ -42,7 +42,7 @@ def generate_events(seed: int = 42, size: str = "small") -> list[Event]:
     days = 4 if size == "small" else 8
     users = 50 if size == "small" else 180
     per_user_day = 7 if size == "small" else 18
-    start = date.today() - timedelta(days=days - 1)
+    start = date(2026, 1, 15) - timedelta(days=days - 1)
     events: list[Event] = []
     idx = 0
 
