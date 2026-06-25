@@ -102,6 +102,12 @@ curl http://localhost:8000/api/health
 
 If Cassandra is still starting, backend errors may clear after Cassandra becomes ready.
 
+If you changed backend code, rebuild the backend container before loading data:
+
+```bash
+docker compose up -d --build backend
+```
+
 ## Reset Everything
 
 This deletes the Cassandra Docker volume and starts clean:

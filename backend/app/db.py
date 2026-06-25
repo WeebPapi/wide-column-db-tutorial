@@ -93,7 +93,7 @@ class CassandraStore:
         }
 
     def load_sample_data(self, seed: int = 42, size: str = "small") -> dict[str, Any]:
-        self.initialize()
+        self.reset()
         session = self.connect()
         session.set_keyspace(CASSANDRA_KEYSPACE)
         events = generate_events(seed=seed, size=size)
