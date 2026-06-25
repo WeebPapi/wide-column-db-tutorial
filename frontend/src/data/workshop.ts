@@ -51,6 +51,7 @@ export const tutorialSteps: LabStep[] = [
     explanation: "A keyspace is like a project folder for tables. Here, all clickstream tables live under activity_tracking.",
     cql: [
       "SOURCE '/workspace/cassandra/01_keyspace.cql';",
+      "USE activity_tracking;",
       "CREATE KEYSPACE IF NOT EXISTS activity_tracking\nWITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};"
     ],
     expected: "`activity_tracking` exists. Later commands can now create tables inside it."
@@ -61,7 +62,7 @@ export const tutorialSteps: LabStep[] = [
     explanation: "Cassandra tables are designed around reads. For example, user history and purchase history need separate tables.",
     cql: [
       "SOURCE '/workspace/cassandra/02_schema.cql';",
-      "DESCRIBE TABLES;"
+      "USE activity_tracking;\nDESCRIBE TABLES;"
     ],
     expected: "You see events_by_user, events_by_type, events_by_device, errors_by_service, daily_user_activity, and event_copies."
   },
@@ -79,28 +80,28 @@ export const tutorialSteps: LabStep[] = [
     commands: [
       "curl -X POST http://localhost:8000/api/data/load -H \"Content-Type: application/json\" -d \"{\\\"seed\\\":42,\\\"size\\\":\\\"small\\\"}\""
     ],
-    cql: ["SELECT count(*) FROM events_by_user;"],
+    cql: ["USE activity_tracking;\nSELECT count(*) FROM events_by_user;"],
     expected: "The count is greater than zero. Note one loaded date from the JSON response, like 2026-01-15."
   },
   {
     title: "Query user history",
     goal: "Read one user's activity for one day.",
     explanation: "This gives Cassandra the full partition key: which user and which day. That makes the read direct.",
-    cql: ["SELECT user_id, event_date, event_time, event_type, service, device_id\nFROM events_by_user\nWHERE user_id = 'user_001'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
+    cql: ["USE activity_tracking;\nSELECT user_id, event_date, event_time, event_type, service, device_id\nFROM events_by_user\nWHERE user_id = 'user_001'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
     expected: "Rows return newest first. You should see actions like login, page_view, search, or purchase."
   },
   {
     title: "Query purchases",
     goal: "Use the duplicated event-type table.",
     explanation: "We use a copy of the event data because this question starts with event_type, not user_id.",
-    cql: ["SELECT event_type, event_date, event_time, user_id, amount\nFROM events_by_type\nWHERE event_type = 'purchase'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
+    cql: ["USE activity_tracking;\nSELECT event_type, event_date, event_time, user_id, amount\nFROM events_by_type\nWHERE event_type = 'purchase'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
     expected: "Purchase rows return without scanning every user. Cassandra reads the purchase/date group directly."
   },
   {
     title: "Query checkout errors",
     goal: "Troubleshoot a service.",
     explanation: "When debugging checkout, we start with service and date. This table matches that question.",
-    cql: ["SELECT service, event_date, event_time, user_id, device_id, status\nFROM errors_by_service\nWHERE service = 'checkout'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
+    cql: ["USE activity_tracking;\nSELECT service, event_date, event_time, user_id, device_id, status\nFROM errors_by_service\nWHERE service = 'checkout'\n  AND event_date = '<loaded date>'\nLIMIT 10;"],
     expected: "Checkout error rows return for one service/day partition, for example checkout errors on the loaded date."
   },
   {
@@ -114,7 +115,7 @@ export const tutorialSteps: LabStep[] = [
     title: "Design a table",
     goal: "Model latest purchases for one device and day.",
     explanation: "The new question starts with device and day, so the table key should start there too.",
-    cql: ["CREATE TABLE purchases_by_device (\n  device_id text,\n  event_date date,\n  event_time timestamp,\n  event_id uuid,\n  user_id text,\n  amount decimal,\n  metadata text,\n  PRIMARY KEY ((device_id, event_date), event_time, event_id)\n) WITH CLUSTERING ORDER BY (event_time DESC, event_id ASC);"],
+    cql: ["USE activity_tracking;\nCREATE TABLE purchases_by_device (\n  device_id text,\n  event_date date,\n  event_time timestamp,\n  event_id uuid,\n  user_id text,\n  amount decimal,\n  metadata text,\n  PRIMARY KEY ((device_id, event_date), event_time, event_id)\n) WITH CLUSTERING ORDER BY (event_time DESC, event_id ASC);"],
     expected: "Partition key: device_id + event_date. Clustering order: newest first, so latest purchases appear first."
   },
   {

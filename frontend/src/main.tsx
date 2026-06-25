@@ -450,6 +450,8 @@ function getCommandSnippet(command: string) {
 }
 
 function getCqlSnippet(stepTitle: string, query: string) {
+  const runnableQuery = query.replace(/^USE activity_tracking;\n/, "");
+
   if (query.startsWith("SOURCE ")) {
     return {
       title: "Paste in cqlsh",
@@ -481,7 +483,7 @@ function getCqlSnippet(stepTitle: string, query: string) {
     };
   }
 
-  if (query.startsWith("CREATE TABLE purchases_by_device")) {
+  if (runnableQuery.startsWith("CREATE TABLE purchases_by_device")) {
     return {
       title: "Optional cqlsh command",
       hint: "Read this as the target design. Paste it in cqlsh only if you want to create the exercise table."
@@ -496,24 +498,24 @@ function getCqlSnippet(stepTitle: string, query: string) {
     };
   }
 
-  if (query.startsWith("DESCRIBE")) {
+  if (runnableQuery.startsWith("DESCRIBE")) {
     return {
       title: "Paste in cqlsh",
-      hint: "Paste this at the cqlsh prompt to check what Cassandra can see."
+      hint: "Paste this at the cqlsh prompt to select the keyspace and check what Cassandra can see."
     };
   }
 
-  if (query.startsWith("SELECT count(*)")) {
+  if (runnableQuery.startsWith("SELECT count(*)")) {
     return {
       title: "Paste in cqlsh",
-      hint: "Paste this at the cqlsh prompt to check that rows were loaded."
+      hint: "Paste this at the cqlsh prompt to select the keyspace and check that rows were loaded."
     };
   }
 
   if (stepTitle.startsWith("Query")) {
     return {
       title: "Paste in cqlsh",
-      hint: "Paste this at the cqlsh prompt. Replace <loaded date> with a real date from the load step."
+      hint: "Paste this at the cqlsh prompt. It selects the keyspace first; replace <loaded date> with a real date from the load step."
     };
   }
 
